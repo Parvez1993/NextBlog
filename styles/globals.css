@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+div.DraftEditor-root {
+  border: 1px solid #000;
+  background-color: rgb(235, 235, 235);
+  height: 500px;
+  width: 100vw;
+  overflow-y: auto;
+}
+div.DraftEditor-editorContainer,
+div.public-DraftEditor-content {
+  height: 100%;
+}
