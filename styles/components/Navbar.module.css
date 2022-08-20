@@ -1,0 +1,11 @@
+@media (min-width: 768px) {
+  .highlight:hover {
+    border-radius: 1em 0 1em 0;
+    background-image: linear-gradient(
+      -100deg,
+      rgba(255, 20, 0, 0.2),
+      rgba(255, 20, 0, 0.7) 95%,
+      rgba(255, 20, 0, 0.1)
+    );
+  }
+}
