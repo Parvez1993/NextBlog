@@ -41,7 +41,6 @@ function Login() {
           localStorage.setItem("userBlogInfo", JSON.stringify(data));
         } catch (err) {
           authDispatch({ type: "AUTH_ERROR", payload: err.message });
-          console.log(err.message);
         }
         // dispatch(loginUser(email, password));
       }

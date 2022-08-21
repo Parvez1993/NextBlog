@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { convertToRaw, EditorState } from "draft-js";
 import { TagsInput } from "react-tag-input-component";
 import { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import draftToHtml from "draftjs-to-html";
 import axios from "axios";
 import { useCreateProductStore } from "../../contextApi/CreateProduct";
 import { useAuthStore } from "../../contextApi/UserContext";
+import { toast, ToastContainer } from "react-toastify";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -27,9 +28,7 @@ const Create = () => {
   const [statusState, setStatus] = useState("incomplete");
   const [category, setCategory] = useState("frontend");
   const [upload, setUpload] = useState("");
-  const [complete, setComplete] = useState(false);
-  let [result, setResult] = useState("");
-  let imageData = null;
+
   const router = useRouter();
 
   let file;
@@ -70,11 +69,10 @@ const Create = () => {
     imageData = data;
 
     createProductDispatch({ type: "ADMIN_IMAGE_SUCCESS", payload: data });
-
-    setResult(imageData);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     uploadImage(upload);
     if (createImage) {
       try {
@@ -103,6 +101,7 @@ const Create = () => {
           type: "ADMIN_RESET",
         });
 
+        toast.success("well done !!! Created Blog");
         if (data) {
           setText("");
           setSelected(["frontend"]);
@@ -112,7 +111,6 @@ const Create = () => {
           setStatus("incomplete");
           setCategory("frontend");
           setUpload("");
-          setResult("");
         }
       } catch (error) {
         createProductDispatch({
@@ -125,7 +123,8 @@ const Create = () => {
 
   return (
     <>
-      <h5>{`${title + meta + selected + statusState + category + upload}`}</h5>
+      {error ? toast.warn(error) : loading ? toast.success("Loading wait") : ""}
+      <ToastContainer />
       <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center my-32">
         <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">
           Keep em Posting eh !!!
@@ -238,7 +237,6 @@ const Create = () => {
               accept="image/*"
               name="image"
               onChange={uploadFileHandler}
-              value={upload}
             />
           </div>
         </div>
@@ -259,7 +257,7 @@ const Create = () => {
       </div>
       <div className="flex my-10">
         <button
-          type="button"
+          type="submit"
           className="w-1/2 inline-block px-6 py-2 border-2 bg-green-500 text-black border-green-600 font-medium text-xs leading-normal uppercase rounded hover:bg-green-900 hover:text-white hover:bg-opacity- focus:outline-none focus:ring-0 transition duration-150 ease-in-out mx-10"
           onClick={handleSubmit}
         >

@@ -2,9 +2,23 @@ import nextConnect from "next-connect";
 import middleware from "../../../../middleware/middleware";
 import Blog from "../../../../models/Blog";
 import dbConnect from "../../../../utils/dbConnect";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
 
 const handler = nextConnect();
 handler.use(middleware);
+
+const upload = multer({
+  storage: multer.diskStorage({}),
+});
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API,
+  api_secret: process.env.CLOUD_SECRET,
+});
+
+handler.use(upload.single("image"));
 
 handler.put(async (req, res) => {
   dbConnect();
@@ -18,8 +32,7 @@ handler.put(async (req, res) => {
     blog.tags = req.body.tags || blog.tags;
     blog.status = req.body.status || blog.status;
     blog.image = req.body.image || blog.image;
-
-    const saveBlog = await blog.save();
+    saveBlog = await blog.save();
     res.status(200).json(saveBlog);
   } else {
     res.status(404).json("No Blog Found");

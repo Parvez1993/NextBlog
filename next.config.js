@@ -6,6 +6,9 @@ const nextConfig = {
 
 module.exports = {
   nextConfig,
+  images: {
+    domains: ["res.cloudinary.com"],
+  },
   env: {
     mongodburl: process.env.DATABASE_LOCAL,
   },

@@ -5,6 +5,7 @@ import { AuthProvider } from "../contextApi/UserContext";
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { AdminProductProvider } from "../contextApi/CreateProduct";
+import { BlogProvider } from "../contextApi/Blog";
 
 function MyApp({ Component, pageProps }) {
   //show or close Sidebar
@@ -33,19 +34,22 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <AuthProvider>
-        <AdminProductProvider>
-          <div className={`${open ? "flex  " : "flex-col bg  "}`}>
-            <Navbar
-              open={open}
-              setOpen={setOpen}
-              showNav={showNav}
-              setShowNav={setShowNav}
-            />
-            <div className="w-full">
-              <Component {...pageProps} />
+        <BlogProvider>
+          {" "}
+          <AdminProductProvider>
+            <div className={`${open ? "flex  " : "flex-col bg  "}`}>
+              <Navbar
+                open={open}
+                setOpen={setOpen}
+                showNav={showNav}
+                setShowNav={setShowNav}
+              />
+              <div className="w-full">
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
-        </AdminProductProvider>
+          </AdminProductProvider>
+        </BlogProvider>
       </AuthProvider>
     </>
   );

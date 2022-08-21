@@ -4,15 +4,14 @@ import Blog from "../../../models/Blog";
 import dbConnect from "../../../utils/dbConnect";
 
 const handlerId = nextConnect();
-handlerId.use(middleware);
 
-handlerId.put(async (req, res) => {
+handlerId.get(async (req, res) => {
   dbConnect();
-  const blog = await blog.findById(req.params.id);
+  const blog = await Blog.findById(req.query.id);
   if (blog) {
-    res.status(StatusCodes.OK).json({ blog });
+    res.status(200).json({ blog });
   } else {
-    res.status(StatusCodes.NOT_FOUND).json({ msg: "no blogs found" });
+    res.status(404).json({ msg: "no blogs found" });
   }
 });
 
