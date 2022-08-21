@@ -31,6 +31,8 @@ const Create = () => {
 
   const router = useRouter();
 
+  const [readyPost, setReadyPost] = useState(false);
+
   let file;
 
   //from context api
@@ -50,7 +52,7 @@ const Create = () => {
 
   let uploadImage = async (file) => {
     createProductDispatch({ type: "ADMIN_LOADING" });
-    let newFile = upload;
+    let newFile = file;
     const formData = new FormData();
     formData.append("image", newFile);
     const config = {
@@ -60,66 +62,71 @@ const Create = () => {
     };
 
     createProductDispatch({ type: "ADMIN_LOADING" });
+    setReadyPost(true);
 
     const { data } = await axios.post(
       "/api/blogs/admin/upload",
       formData,
       config
     );
-    imageData = data;
 
     createProductDispatch({ type: "ADMIN_IMAGE_SUCCESS", payload: data });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     uploadImage(upload);
-    if (createImage) {
-      try {
-        let { data } = await axios.post(
-          `/api/blogs/admin`,
-          {
-            title: title,
-            content: text,
-            metaDesc: meta,
-            tags: selected,
-            status: statusState,
-            cloudinary_id: createImage.id,
-            cloudinary_result: createImage.result,
-            image: createImage,
-            category_name: category,
+  };
+
+  const uploadProduct = async () => {
+    setReadyPost(false);
+    try {
+      let { data } = await axios.post(
+        `/api/blogs/admin`,
+        {
+          title: title,
+          content: text,
+          metaDesc: meta,
+          tags: selected,
+          status: statusState,
+          cloudinary_id: createImage.id,
+          cloudinary_result: createImage.result,
+          image: createImage,
+          category_name: category,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-
-        createProductDispatch({ type: "ADMIN_SUCCESS", payload: data });
-        createProductDispatch({
-          type: "ADMIN_RESET",
-        });
-
-        toast.success("well done !!! Created Blog");
-        if (data) {
-          setText("");
-          setSelected(["frontend"]);
-          setEditorState(EditorState.createEmpty());
-          setTitle("");
-          setMeta("");
-          setStatus("incomplete");
-          setCategory("frontend");
-          setUpload("");
         }
-      } catch (error) {
-        createProductDispatch({
-          type: "ADMIN_ERROR",
-          payload: error.msg,
-        });
+      );
+
+      createProductDispatch({ type: "ADMIN_SUCCESS", payload: data });
+      createProductDispatch({
+        type: "ADMIN_RESET",
+      });
+
+      toast.success("well done !!! Created Blog");
+      if (data) {
+        setText("");
+        setSelected(["frontend"]);
+        setEditorState(EditorState.createEmpty());
+        setTitle("");
+        setMeta("");
+        setStatus("incomplete");
+        setCategory("frontend");
+        setUpload("");
       }
+    } catch (error) {
+      createProductDispatch({
+        type: "ADMIN_ERROR",
+        payload: error.msg,
+      });
     }
   };
+
+  if (readyPost) {
+    uploadProduct();
+  }
 
   return (
     <>
@@ -257,7 +264,6 @@ const Create = () => {
       </div>
       <div className="flex my-10">
         <button
-          type="submit"
           className="w-1/2 inline-block px-6 py-2 border-2 bg-green-500 text-black border-green-600 font-medium text-xs leading-normal uppercase rounded hover:bg-green-900 hover:text-white hover:bg-opacity- focus:outline-none focus:ring-0 transition duration-150 ease-in-out mx-10"
           onClick={handleSubmit}
         >

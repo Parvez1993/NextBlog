@@ -3,12 +3,18 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBlogStore } from "../../contextApi/Blog";
 import { useRouter } from "next/router";
-import { ContentState, convertFromHTML, EditorState } from "draft-js";
+import {
+  ContentState,
+  convertFromHTML,
+  convertToRaw,
+  EditorState,
+} from "draft-js";
 import dynamic from "next/dynamic";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { toast, ToastContainer } from "react-toastify";
 import { TagsInput } from "react-tag-input-component";
 import { useAuthStore } from "../../contextApi/UserContext";
+import draftToHtml from "draftjs-to-html";
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
   { ssr: false }
@@ -36,6 +42,8 @@ const UpdateBlogs = () => {
   const [imgData, setImgData] = useState("");
   const [imageId, setImageId] = useState("");
 
+  const [ready, setReady] = useState(false);
+
   // /refresh
 
   const [refresh, setRefresh] = useState(false);
@@ -47,35 +55,6 @@ const UpdateBlogs = () => {
   const { blogs, error, loading, image } = blogState;
 
   //check if there is new uploaded image or not
-
-  let uploadImage = async (file) => {
-    blogDispatch({ type: "BLOG_LOADING" });
-    let newFile = upload;
-    const formData = new FormData();
-    formData.append("image", newFile);
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
-    const { data } = await axios.post(
-      "/api/blogs/admin/editUpload",
-      formData,
-      config
-    );
-
-    blogDispatch({ type: "BLOG_IMAGE", payload: data });
-  };
-
-  const uploadFileHandler = (e) => {
-    setNewUpload(e.target.files[0]);
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      setImgData(reader.result);
-    });
-    reader.readAsDataURL(e.target.files[0]);
-  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -101,20 +80,78 @@ const UpdateBlogs = () => {
           setUpload(blog.cloudinary_result);
           setImageId(blog.cloudinary_id);
           setImgData(blog.cloudinary_result);
+          setNewUpload("");
         }
       } catch (error) {
         blogDispatch({ type: "BLOG_ERROR", payload: error.message });
       }
     };
 
-    if (refresh) {
-      setRefresh(false);
-    }
-
     if (id && user) {
       fetchProducts();
     }
-  }, [id, refresh]);
+  }, [id, user, ready]);
+
+  let uploadImage = async () => {
+    blogDispatch({ type: "BLOG_LOADING" });
+    let newFile = newUpload;
+    const formData = new FormData();
+    formData.append("image", newFile);
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/blogs/admin/editPic/${id}`,
+      formData,
+      config
+    );
+
+    blogDispatch({ type: "BLOG_IMAGE", payload: data });
+    setReady(true);
+  };
+
+  const submitPost = async () => {
+    setReady(false);
+    let { data } = await axios.put(
+      `/api/blogs/admin/${id}`,
+      {
+        title: title,
+        content: text,
+        metaDesc: meta,
+        tags: selected,
+        status: statusState,
+        cloudinary_id: image ? image.id : upload,
+        cloudinary_result: image ? image.result : imgData,
+        category_name: category,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    blogDispatch({ type: "BLOG_SUCCESS", payload: data });
+    blogDispatch({
+      type: "BLOG_RESET",
+    });
+  };
+
+  if (ready) {
+    submitPost();
+  }
+
+  const uploadFileHandler = (e) => {
+    setNewUpload(e.target.files[0]);
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      setImgData(reader.result);
+    });
+    reader.readAsDataURL(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,30 +160,6 @@ const UpdateBlogs = () => {
       try {
         blogDispatch({ type: "BLOG_LOADING" });
         uploadImage(newUpload);
-        let { data } = await axios.put(
-          `/api/blogs/admin`,
-          {
-            title: title,
-            content: text,
-            metaDesc: meta,
-            tags: selected,
-            status: statusState,
-            cloudinary_id: image ? image.id : imageId,
-            cloudinary_result: imgData,
-            image: createImage,
-            category_name: category,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-
-        blogDispatch({ type: "BLOG_SUCCESS", payload: data });
-        blogDispatch({
-          type: "BLOG_RESET",
-        });
 
         setRefresh(true);
       } catch (error) {

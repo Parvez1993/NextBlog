@@ -2,6 +2,7 @@ import nextConnect from "next-connect";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import Blog from "../../../../models/Blog";
+import dbConnect from "../../../../utils/dbConnect";
 const upload = multer({
   storage: multer.diskStorage({}),
 });
@@ -26,12 +27,18 @@ const apiRoute = nextConnect({
 apiRoute.use(upload.single("image"));
 
 apiRoute.post(async (req, res) => {
-  const blog = await Blog.findById(req.body.id);
+  const id = req.query.editImage;
+  dbConnect();
+  const blog = await Blog.findById(id);
+
   if (blog) {
-    await cloudinary.uploader.destroy(blog.cloudinary_id);
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: "blogs",
     });
+
+    if (result) {
+      await cloudinary.uploader.destroy(blog.cloudinary_id);
+    }
     res.send({ id: result.public_id, result: result.secure_url });
   } else {
     res.status(404).send("Not found");

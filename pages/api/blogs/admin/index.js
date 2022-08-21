@@ -22,7 +22,6 @@ handler.post(async (req, res) => {
     numReviews,
   } = req.body;
 
-
   const blog = await Blog.create({
     user: req.user.userId,
     title,
@@ -37,9 +36,9 @@ handler.post(async (req, res) => {
   });
 
   if (blog) {
-    res.status(201).send({ blog });
+    return res.status(201).send({ blog });
   } else {
-    res.status(404).json("No Blog Found");
+    return res.status(404).send("No Blog Found");
   }
 });
 
