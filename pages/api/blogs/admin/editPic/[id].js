@@ -45,6 +45,20 @@ apiRoute.post(async (req, res) => {
   }
 });
 
+//delete also here//////////////////////////////////////////////////////////////////////////////////////////////
+
+apiRoute.delete(async (req, res) => {
+  const id = req.query.id;
+  dbConnect();
+
+  const blog = await Blog.findById(id);
+
+  await cloudinary.uploader.destroy(`${blog.cloudinary_id}`);
+  await blog.remove();
+
+  return res.send("succesfully deleted");
+});
+
 export default apiRoute;
 
 export const config = {

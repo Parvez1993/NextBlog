@@ -1,14 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useBlogStore } from "../../contextApi/Blog";
 import axios from "axios";
 import moment from "moment";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../../contextApi/UserContext";
 
 function BlogTable() {
   const { blogState, blogDispatch } = useBlogStore();
 
   const { blogs, error, loading } = blogState;
+
+  let [success, setSuccess] = useState("");
+
+  let [reload, setReload] = useState(false);
+
+  const { authState } = useAuthStore();
+
+  const { user } = authState;
 
   useEffect(() => {
     let fetchProducts = async () => {
@@ -24,10 +33,41 @@ function BlogTable() {
     fetchProducts();
   }, []);
 
+  let handleDelete = async (id) => {
+    try {
+      blogDispatch({ type: "BLOG_LOADING" });
+      let { data } = await axios.delete(`/api/blogs/admin/editPic/${id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      blogDispatch({ type: "BLOG_SUCCESS", payload: data });
+      setSuccess(true);
+      setReload(true);
+    } catch (error) {
+      blogDispatch({ type: "BLOG_ERROR", payload: error.msg });
+    }
+  };
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+
+    if (reload) {
+      setReload(false);
+      fetchProducts();
+    }
+  }, [reload, success]);
+
   return (
     <>
       {error ? toast.error(error) : loading ? toast.success("loading") : ""}
-      {blogs && (
+      {success ? toast.success("deleted successfully") : ""}
+      {blogs !== [] && (
         <div>
           {" "}
           <div className="flex  flex-col gap-y-3 md:flex-row justify-between items-center px-8">
@@ -80,9 +120,9 @@ function BlogTable() {
                 className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
               >
                 <option selected>Select Status</option>
-                <option value="pending">Pending</option>
-                <option value="processing">Processing</option>
-                <option value="completed">Completed</option>
+                <option value="incomplete">incomplete</option>
+                <option value="processing">processing</option>
+                <option value="success">success</option>
               </select>
             </div>
           </div>
@@ -147,7 +187,12 @@ function BlogTable() {
                             </Link>
                           </td>
                           <td className="py-4 px-6">
-                            <div className="bg-red-500 text-center px-1 py-2 border text-white">
+                            <div
+                              className="bg-red-500 text-center px-1 py-2 border text-white"
+                              onClick={() => {
+                                handleDelete(item._id);
+                              }}
+                            >
                               Delete
                             </div>
                           </td>

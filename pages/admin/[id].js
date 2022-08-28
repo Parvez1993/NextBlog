@@ -46,13 +46,12 @@ const UpdateBlogs = () => {
 
   // /refresh
 
-  const [refresh, setRefresh] = useState(false);
   const router = useRouter();
   const { id } = router.query;
 
   const { blogState, blogDispatch } = useBlogStore();
 
-  const { blogs, error, loading, image } = blogState;
+  const { blogs, error, loading, image, success } = blogState;
 
   //check if there is new uploaded image or not
 
@@ -114,7 +113,6 @@ const UpdateBlogs = () => {
   };
 
   const submitPost = async () => {
-    setReady(false);
     let { data } = await axios.put(
       `/api/blogs/admin/${id}`,
       {
@@ -140,9 +138,12 @@ const UpdateBlogs = () => {
     });
   };
 
-  if (ready) {
-    submitPost();
-  }
+  useEffect(() => {
+    if (ready) {
+      setReady(false);
+      submitPost();
+    }
+  }, [ready]);
 
   const uploadFileHandler = (e) => {
     setNewUpload(e.target.files[0]);
@@ -160,8 +161,6 @@ const UpdateBlogs = () => {
       try {
         blogDispatch({ type: "BLOG_LOADING" });
         uploadImage(newUpload);
-
-        setRefresh(true);
       } catch (error) {
         blogDispatch({
           type: "ADMIN_ERROR",
@@ -205,7 +204,6 @@ const UpdateBlogs = () => {
           setCategory("frontend");
           setUpload("");
         }
-        setRefresh(true);
       } catch (error) {
         blogDispatch({
           type: "BLOG_ERROR",
@@ -217,7 +215,12 @@ const UpdateBlogs = () => {
 
   //get products
 
-  console.log(title);
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [router, user]);
+
   return (
     <>
       <>
@@ -226,6 +229,8 @@ const UpdateBlogs = () => {
           : loading
           ? toast.success("Loading wait")
           : ""}
+
+        {success ? toast.success("Ok Great Done") : ""}
         <ToastContainer />
         <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center my-32">
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">
@@ -298,11 +303,9 @@ const UpdateBlogs = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-none"
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <option selected value="incompleted">
-                  Incomplete
-                </option>
-                <option value="processing">Processing</option>
-                <option value="completed">Completed</option>
+                <option value="incomplete">incomplete</option>
+                <option value="processing">processing</option>
+                <option value="success">success</option>
               </select>
             </div>
             <div>

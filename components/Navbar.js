@@ -99,12 +99,14 @@ const Navbar = ({ open, showNav, setShowNav }) => {
               }`}
             >
               <li className={cls(styles.highlight, "flex justify-center py-2")}>
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="flex items-center p-2 space-x-3 rounded-md"
                 >
-                  <span className="text-gray-800 hover:highlight">Home</span>
-                </a>
+                  <a>
+                    <span className="text-gray-800 hover:highlight">Home</span>
+                  </a>
+                </Link>
               </li>
               <li className={cls(styles.highlight, "flex justify-center py-2")}>
                 <a

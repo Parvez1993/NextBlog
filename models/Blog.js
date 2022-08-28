@@ -42,7 +42,6 @@ const blogSchema = mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["incomplete", "processing", "success"],
     },
     cloudinary_id: { type: String, required: true },
     cloudinary_result: { type: String, required: true },

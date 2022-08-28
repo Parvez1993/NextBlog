@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { convertToRaw, EditorState } from "draft-js";
 import { TagsInput } from "react-tag-input-component";
 import { useRouter } from "next/router";
@@ -50,6 +50,7 @@ const Create = () => {
     setUpload(file);
   };
 
+  //upload Image concept
   let uploadImage = async (file) => {
     createProductDispatch({ type: "ADMIN_LOADING" });
     let newFile = file;
@@ -62,7 +63,6 @@ const Create = () => {
     };
 
     createProductDispatch({ type: "ADMIN_LOADING" });
-    setReadyPost(true);
 
     const { data } = await axios.post(
       "/api/blogs/admin/upload",
@@ -71,14 +71,29 @@ const Create = () => {
     );
 
     createProductDispatch({ type: "ADMIN_IMAGE_SUCCESS", payload: data });
+    setReadyPost(true);
   };
+
+  console.log(statusState, category);
 
   const handleSubmit = () => {
     uploadImage(upload);
   };
 
+  useEffect(() => {
+    if (readyPost === true) {
+      setReadyPost(false);
+      uploadProduct();
+    }
+  }, [readyPost]);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [router, user]);
+
   const uploadProduct = async () => {
-    setReadyPost(false);
     try {
       let { data } = await axios.post(
         `/api/blogs/admin`,
@@ -124,9 +139,7 @@ const Create = () => {
     }
   };
 
-  if (readyPost) {
-    uploadProduct();
-  }
+  // if i am ready to post then upload product to database
 
   return (
     <>

@@ -17,10 +17,12 @@ function createProductReducer(state, action) {
       return {
         ...state,
         loading: true,
+        success: false,
       };
     case "ADMIN_IMAGE_SUCCESS":
       return {
         ...state,
+        success: false,
         image: action.payload,
         error: null,
       };
@@ -31,6 +33,7 @@ function createProductReducer(state, action) {
         loading: false,
         error: "",
         created_product: action.payload,
+        success: true,
       };
 
     case "ADMIN_RESET":
