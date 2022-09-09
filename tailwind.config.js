@@ -8,5 +8,10 @@ module.exports = {
   theme: {
     extend: {},
   },
+  variants: {
+    extend: {
+      display: ["group-hover"],
+    },
+  },
   plugins: [],
 };

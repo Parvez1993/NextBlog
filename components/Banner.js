@@ -12,7 +12,7 @@ const Banner = () => {
         alt="cover"
         height="40vh"
         width="100vw"
-        className="grayscale -z-50 "
+        className="grayscale -z-10 "
       />
 
       <div className={cls(styles.insetCenter)}>

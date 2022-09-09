@@ -28,6 +28,10 @@ function MyApp({ Component, pageProps }) {
 
   // create an event listener
   useEffect(() => {
+    if (window.innerWidth < 768.9) {
+      setOpen(false);
+      setShowNav(true);
+    }
     window.addEventListener("resize", handleResize);
   }, []);
 

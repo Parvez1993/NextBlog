@@ -12,10 +12,6 @@ const Navbar = ({ open, showNav, setShowNav }) => {
 
   const { user, loading, error } = authState;
 
-  console.log(user);
-
-  console.log("here", userLocal);
-
   useEffect(() => {
     if (user) {
       setUserLocal(
