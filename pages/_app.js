@@ -6,6 +6,7 @@ import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { AdminProductProvider } from "../contextApi/CreateProduct";
 import { BlogProvider } from "../contextApi/Blog";
+import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }) {
   //show or close Sidebar
@@ -41,7 +42,7 @@ function MyApp({ Component, pageProps }) {
         <BlogProvider>
           {" "}
           <AdminProductProvider>
-            <div className={`${open ? "flex  " : "flex-col bg  "}`}>
+            <div className={`${open ? "flex " : "flex-col bg"}`}>
               <Navbar
                 open={open}
                 setOpen={setOpen}
