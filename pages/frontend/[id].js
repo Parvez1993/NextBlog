@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 function SingleFrontendBlog() {
+  console.log(posts);
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">

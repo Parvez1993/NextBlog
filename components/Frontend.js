@@ -15,6 +15,7 @@ function Frontend() {
               layout="intrinsic"
               width={600}
               height={400}
+              alt="try"
             />
             <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-11 w-4/5 hover:opacity-90 duration-300 ease-linear">
               <h2 className="text-2xl text">What is Frontend?</h2>
