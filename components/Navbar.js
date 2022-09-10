@@ -105,12 +105,16 @@ const Navbar = ({ open, showNav, setShowNav }) => {
                 </Link>
               </li>
               <li className={cls(styles.highlight, "flex justify-center py-2")}>
-                <a
-                  href="#"
+                <Link
+                  href="/frontend"
                   className="flex items-center p-2 space-x-3 rounded-md"
                 >
-                  <span className="text-gray-800">Inbox</span>
-                </a>
+                  <a>
+                    <span className="text-gray-800 hover:highlight">
+                      Frontend
+                    </span>
+                  </a>
+                </Link>
               </li>
               <li className={cls(styles.highlight, "flex justify-center py-2")}>
                 <a
