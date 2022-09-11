@@ -9,7 +9,7 @@ handlerId.get(async (req, res) => {
   dbConnect();
   const blog = await Blog.findById(req.query.id);
   if (blog) {
-    res.status(200).json({ blog });
+    res.status(200).json(blog);
   } else {
     res.status(404).json({ msg: "no blogs found" });
   }
