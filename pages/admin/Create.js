@@ -41,6 +41,14 @@ const Create = () => {
 
   const { user } = authState;
 
+  useEffect(() => {
+    if (user) {
+      if (user.info.isAdmin === false) {
+        router.push("/");
+      }
+    }
+  }, [user]);
+
   const { createProductState, createProductDispatch } = useCreateProductStore();
 
   const { image: createImage, error, loading } = createProductState;
@@ -74,8 +82,6 @@ const Create = () => {
     setReadyPost(true);
   };
 
-  console.log(statusState, category);
-
   const handleSubmit = () => {
     uploadImage(upload);
   };
@@ -103,6 +109,7 @@ const Create = () => {
           metaDesc: meta,
           tags: selected,
           status: statusState,
+          category_name: category,
           cloudinary_id: createImage.id,
           cloudinary_result: createImage.result,
           image: createImage,

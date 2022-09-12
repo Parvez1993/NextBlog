@@ -1,6 +1,23 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import BlogTable from "../../components/admin/BlogTable";
+import { useAuthStore } from "../../contextApi/UserContext";
 
 function Dashboard() {
+  //user check
+  const { authState } = useAuthStore();
+  const router = useRouter();
+  const { user, loading, error } = authState;
+
+  //check if it is admin
+  useEffect(() => {
+    if (user) {
+      if (user.info.isAdmin === false) {
+        router.push("/");
+      }
+    }
+  }, [user]);
+
   return (
     <>
       <section className="text-gray-600 body-font">

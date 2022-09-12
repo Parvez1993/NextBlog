@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Provider } from "react-redux";
+
 import Navbar from "../components/Navbar";
 import { AuthProvider } from "../contextApi/UserContext";
 import "../styles/globals.css";

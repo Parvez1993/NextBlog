@@ -91,6 +91,15 @@ const UpdateBlogs = () => {
     }
   }, [id, user, ready]);
 
+  //check if it is admin
+  useEffect(() => {
+    if (user) {
+      if (user.info.isAdmin === false) {
+        router.push("/");
+      }
+    }
+  }, [user]);
+
   let uploadImage = async () => {
     blogDispatch({ type: "BLOG_LOADING" });
     let newFile = newUpload;

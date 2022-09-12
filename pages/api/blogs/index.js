@@ -7,7 +7,7 @@ import dbConnect from "../../../utils/dbConnect";
 
 export default async function handler(req, res) {
   dbConnect();
-  const blog = await Blog.find();
+  const blog = await Blog.find({ status: "completed" });
   if (blog) {
     res.status(200).json(blog);
   } else {

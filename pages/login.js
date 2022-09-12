@@ -17,11 +17,13 @@ function Login() {
 
   const { user, error, loading } = authState;
 
-  console.log(user);
-
   useEffect(() => {
     if (user) {
-      router.push("/admin");
+      if (user.isAdmin) {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
     }
   }, [router, user]);
 
@@ -45,7 +47,23 @@ function Login() {
         // dispatch(loginUser(email, password));
       }
     } else {
-      return 0;
+      if (!email || !password || !name) {
+        return window.alert("Fill out all the forms");
+      } else {
+        authDispatch({ type: "AUTH_LOADING" });
+        try {
+          const { data } = await axios.post(`/api/users/register`, {
+            name,
+            email,
+            password,
+          });
+          authDispatch({ type: "AUTH_SUCCESS", payload: data });
+          localStorage.setItem("userBlogInfo", JSON.stringify(data));
+        } catch (err) {
+          authDispatch({ type: "AUTH_ERROR", payload: err.message });
+        }
+        // dispatch(loginUser(email, password));
+      }
     }
   };
 
@@ -135,7 +153,7 @@ function Login() {
               {!isMember ? "Register" : "Sign in"}
             </button>
             {/* if i need to implement registration in future  */}
-            {/* <p
+            <p
               className="text-sm text-gray-500 mt-3"
               onClick={() => setIsMember(!isMember)}
             >
@@ -150,7 +168,7 @@ function Login() {
                   Already have an account click here
                 </span>
               )}
-            </p> */}
+            </p>
           </div>
         </div>
       </section>
