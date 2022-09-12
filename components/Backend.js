@@ -18,7 +18,7 @@ function Backend({ posts }) {
               alt="Blog"
             />
             <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-11 w-4/5 hover:opacity-90 duration-300 ease-linear">
-              <h2 className="text-2xl text">What is Backend?</h2>
+              <h2 className="text-2xl text">{posts[0].title}</h2>
               <p className="py-2">{posts[0].metaDesc}</p>
             </div>
           </div>
@@ -26,7 +26,7 @@ function Backend({ posts }) {
           <div className="flex flex-col justify-center items-center">
             <div className="relative">
               <Image
-                src={posts[0].cloudinary_result}
+                src={posts[1].cloudinary_result}
                 layout="intrinsic"
                 width={600}
                 height={197}
@@ -34,17 +34,14 @@ function Backend({ posts }) {
                 alt="Blog"
               />
               <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-4 w-4/5 hover:opacity-90 duration-300 ease-linear">
-                <h2 className="text-xl text">What is Frontend?</h2>
-                <p className="py-2">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
-                </p>
+                <h2 className="text-xl text">{posts[1].title}</h2>
+                <p className="py-2">{posts[1].metaDesc}</p>
                 <span>12:0:07</span>
               </div>
             </div>
             <div className="relative">
               <Image
-                src={posts[0].cloudinary_result}
+                src={posts[2].cloudinary_result}
                 layout="intrinsic"
                 width={600}
                 height={197}
@@ -52,11 +49,8 @@ function Backend({ posts }) {
                 alt="Blog"
               />
               <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-11 w-4/5 hover:opacity-90 duration-300 ease-linear">
-                <h2 className="text-2xl text">What is Frontend?</h2>
-                <p className="py-2">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
-                </p>
+                <h2 className="text-2xl text">{posts[2].title}</h2>
+                <p className="py-2">{posts[2].metaDesc}</p>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ function Frontend({ posts }) {
               alt="try"
             />
             <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-11 w-4/5 hover:opacity-90 duration-300 ease-linear">
-              <h2 className="text-2xl text">What is Frontend?</h2>
+              <h2 className="text-xl text">{posts[0].title}</h2>
               <p className="py-2">{posts[0].metaDesc}</p>
             </div>
           </div>
@@ -33,7 +33,7 @@ function Frontend({ posts }) {
                 className="object-cover"
               />
               <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-11 w-4/5 hover:opacity-90 duration-300 ease-linear">
-                <h2 className="text-xl text">What is Frontend?</h2>
+                <h2 className="text-xl text">{posts[1].title}</h2>
                 <p className="py-2">{posts[1].metaDesc}</p>
               </div>
             </div>
@@ -46,7 +46,7 @@ function Frontend({ posts }) {
                 className="object-cover"
               />
               <div className="opacity-0 hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-pink-900  p-11 w-4/5 hover:opacity-90 duration-300 ease-linear">
-                <h2 className="text-2xl text">What is Frontend?</h2>
+                <h2 className="text-xl text">{posts[2].title}</h2>
                 <p className="py-2">{posts[2].metaDesc}</p>
               </div>
             </div>

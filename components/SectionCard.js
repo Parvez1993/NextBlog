@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function SectionCard({ posts }) {
   const { blog } = posts;
-  console.log(blog);
+
   return (
     <>
       <section className="text-gray-600 body-font overflow-hidden">

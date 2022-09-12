@@ -16,24 +16,28 @@ export async function getStaticProps() {
   const res1 = await fetch(`${URL}/api/blogs/frontend`);
   const posts1 = await res1.json();
 
+  const res2 = await fetch(`${URL}/api/blogs/tips`);
+  const posts2 = await res2.json();
+
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
     props: {
       backendPosts: posts,
       frontendPosts: posts1,
+      tipsPosts: posts2,
     },
   };
 }
 
-export default function Home({ backendPosts, frontendPosts }) {
+export default function Home({ backendPosts, frontendPosts, tipsPosts }) {
   return (
     <>
       <Banner />
       <Category />
       <Frontend posts={frontendPosts} />
       <Backend posts={backendPosts} />
-      <Tips />
+      <Tips posts={tipsPosts} />
       <Footer />
     </>
   );
