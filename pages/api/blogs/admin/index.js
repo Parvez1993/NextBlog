@@ -20,6 +20,7 @@ handler.post(async (req, res) => {
     cloudinary_id,
     cloudinary_result,
     numReviews,
+    category_name,
   } = req.body;
 
   const blog = await Blog.create({
@@ -33,6 +34,7 @@ handler.post(async (req, res) => {
     cloudinary_id,
     cloudinary_result,
     numReviews,
+    category_name,
   });
 
   if (blog) {

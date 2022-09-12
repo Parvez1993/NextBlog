@@ -63,22 +63,20 @@ const UpdateBlogs = () => {
         blogDispatch({ type: "BLOG_SUCCESS", payload: data });
 
         if (data) {
-          const { blog } = data;
-
-          setText(blog.content);
-          setSelected(blog.tags);
+          setText(data.content);
+          setSelected(data.tags);
           setEditorState(
             EditorState.createWithContent(
-              ContentState.createFromBlockArray(convertFromHTML(blog.content))
+              ContentState.createFromBlockArray(convertFromHTML(data.content))
             )
           );
-          setTitle(blog.title);
-          setMeta(blog.metaDesc);
-          setStatus(blog.status);
-          setCategory(blog.category);
-          setUpload(blog.cloudinary_result);
-          setImageId(blog.cloudinary_id);
-          setImgData(blog.cloudinary_result);
+          setTitle(data.title);
+          setMeta(data.metaDesc);
+          setStatus(data.status);
+          setCategory(data.category);
+          setUpload(data.cloudinary_result);
+          setImageId(data.cloudinary_id);
+          setImgData(data.cloudinary_result);
           setNewUpload("");
         }
       } catch (error) {

@@ -109,7 +109,6 @@ const Create = () => {
           metaDesc: meta,
           tags: selected,
           status: statusState,
-          category_name: category,
           cloudinary_id: createImage.id,
           cloudinary_result: createImage.result,
           image: createImage,

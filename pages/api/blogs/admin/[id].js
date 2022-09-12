@@ -9,8 +9,6 @@ handler.use(middleware);
 handler.put(async (req, res) => {
   dbConnect();
 
-  console.log(req.body.cloudinary_id, req.body.cloudinary_result);
-
   const blog = await Blog.findById(req.query.id);
 
   if (blog) {
@@ -21,9 +19,11 @@ handler.put(async (req, res) => {
     blog.tags = req.body.tags || blog.tags;
     blog.status = req.body.status || blog.status;
     blog.cloudinary_id = req.body.cloudinary_id || blog.cloudinary_id;
+
     blog.cloudinary_result =
       req.body.cloudinary_result || blog.cloudinary_result;
     blog.image = req.body.image || blog.image;
+    blog.category_name = req.body.category_name || blog.category_name;
 
     let saveBlog = await blog.save();
     return res.status(200).send(saveBlog);
