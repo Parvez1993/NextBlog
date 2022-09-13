@@ -18,7 +18,7 @@ export async function getStaticProps() {
 }
 
 function frontend({ posts }) {
-  return <SectionCard posts={posts} />;
+  return <SectionCard posts={posts} link="frontend" />;
 }
 
 export default frontend;

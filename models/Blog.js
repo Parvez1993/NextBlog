@@ -15,20 +15,6 @@ const reviewSchema = mongoose.Schema(
   }
 );
 
-const imageSchema = mongoose.Schema(
-  {
-    id: { type: String },
-    result: { type: String },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
 const blogSchema = mongoose.Schema(
   {
     user: {

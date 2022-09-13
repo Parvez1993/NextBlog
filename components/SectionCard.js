@@ -3,7 +3,7 @@ import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 
-function SectionCard({ posts }) {
+function SectionCard({ posts, link }) {
   const { blog } = posts;
 
   return (
@@ -43,7 +43,7 @@ function SectionCard({ posts }) {
                   </div>
                   <p className="leading-relaxed mb-8">{item.metaDesc}</p>
                   <div className="flex items-center flex-wrap pb-4 mb-4 border-b-2 border-gray-100 mt-auto w-full">
-                    <Link href={`/frontend/${item._id}`}>
+                    <Link href={`/${link}/${item._id}`}>
                       <a className="text-red-500 inline-flex items-center">
                         Learn More
                       </a>

@@ -1,33 +1,49 @@
 import moment from "moment";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import Comment from "../../components/Comment";
+import { useAuthStore } from "../../contextApi/UserContext";
 
-export async function getStaticPaths() {
+// export async function getStaticPaths() {
+//   const { URL } = process.env;
+//   // Call an external API endpoint to get posts
+//   const res = await fetch(`${URL}/api/blogs`);
+//   const posts = await res.json();
+
+//   // Get the paths we want to pre-render based on posts
+//   const paths = posts.map((post) => ({
+//     params: { id: post._id.toString() },
+//   }));
+
+//   // We'll pre-render only these paths at build time.
+//   // { fallback: false } means other routes should 404.
+//   return { paths, fallback: false };
+// }
+
+// export async function getStaticProps({ params }) {
+//   const { URL } = process.env;
+
+//   let id = params.id;
+//   // Call an external API endpoint to get posts.
+//   // You can use any data fetching library
+//   const res = await fetch(`${URL}/api/blogs/${id}`);
+//   const posts = await res.json();
+
+//   // By returning { props: { posts } }, the Blog component
+//   // will receive `posts` as a prop at build time
+//   return {
+//     props: {
+//       posts,
+//     },
+//   };
+// }
+
+export async function getServerSideProps(context) {
+  const { id } = context.query;
   const { URL } = process.env;
-  // Call an external API endpoint to get posts
-  const res = await fetch(`${URL}/api/blogs`);
-  const posts = await res.json();
-
-  // Get the paths we want to pre-render based on posts
-  const paths = posts.map((post) => ({
-    params: { id: post._id.toString() },
-  }));
-
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params }) {
-  const { URL } = process.env;
-
-  let id = params.id;
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
   const res = await fetch(`${URL}/api/blogs/${id}`);
   const posts = await res.json();
-
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
   return {
     props: {
       posts,
@@ -36,6 +52,11 @@ export async function getStaticProps({ params }) {
 }
 
 function SingleBackendBlog({ posts }) {
+  const [newComment, setNewComment] = useState(false);
+  const { authState } = useAuthStore();
+  const { user } = authState;
+  const router = useRouter();
+  const { id } = router.query;
   console.log(posts);
   return (
     <section className="text-gray-600 body-font">
@@ -80,6 +101,21 @@ function SingleBackendBlog({ posts }) {
             {`Published on ${moment(posts.createdAt).format("MMM Do YY")}`}
           </div>
         </div>
+
+        {/* //ratings */}
+
+        {posts.reviews.length === 0 && (
+          <p className="text-xl font-bold mt-2 text-center text-red-200 bg-red-800 w-1/4 mx-auto p-3">
+            No Reviews
+          </p>
+        )}
+
+        <Comment
+          id={id}
+          user={user?.token}
+          newComment={newComment}
+          setNewComment={setNewComment}
+        />
       </div>
     </section>
   );

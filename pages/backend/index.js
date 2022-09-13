@@ -18,7 +18,7 @@ export async function getStaticProps() {
 }
 
 function backend({ posts }) {
-  return <SectionCard posts={posts} />;
+  return <SectionCard posts={posts} link="backend" />;
 }
 
 export default backend;

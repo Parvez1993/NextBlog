@@ -17,6 +17,8 @@ function Login() {
 
   const { user, error, loading } = authState;
 
+  console.log(error);
+
   useEffect(() => {
     if (user) {
       if (user.isAdmin) {
@@ -160,7 +162,7 @@ function Login() {
               {isMember ? (
                 <span className="text-red-900 cursor-pointer">
                   {" "}
-                  Don't have an account? Click here
+                  Dont have an account? Click here
                 </span>
               ) : (
                 <span className="text-red-900 cursor-pointer">

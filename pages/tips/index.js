@@ -18,7 +18,7 @@ export async function getStaticProps() {
 }
 
 function tips({ posts }) {
-  return <SectionCard posts={posts} />;
+  return <SectionCard posts={posts} link="tips" />;
 }
 
 export default tips;
