@@ -1,23 +1,19 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import { useCreateBlog } from "../contextApi/Comment";
 
-function Comment({ id, user, setNewComment }) {
+function Comment({ id, user, setRefresh }) {
   const [comment, setComment] = useState("");
   const [ratings, setRatings] = useState(0);
   const { createReviewDispatch } = useCreateBlog();
 
-  console.log("user", user);
-  const ratingChanged = (newRating) => {
-    setRatings(newRating);
-  };
-
+  console.log(ratings);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       createReviewDispatch({ type: "PRODUCT_CREATE_REVIEW_BEGIN" });
-      const { data } = await axios.post(
+      const data = await axios.post(
         `/api/blogs/comment/${id}`,
         { rating: ratings, comment },
         {
@@ -27,29 +23,30 @@ function Comment({ id, user, setNewComment }) {
         }
       );
       createReviewDispatch({ type: "PRODUCT_CREATE_REVIEW_SUCCESS" });
-      setNewComment(true);
+      setRefresh(true);
     } catch (error) {
       createReviewDispatch({
         type: "PRODUCT_CREATE_REVIEW_FAIL",
-        payload: error.response.data,
+        payload: error?.response?.data,
       });
-      return window.alert(error.response.data);
+
+      return window.alert(error?.response?.data);
     }
   };
 
   return (
     <>
-      <div className="container px-5 py-24 mx-auto">
-        <div className="ml-5">
-          {" "}
+      <div>
+        <div className="py-3 px-4">
           <ReactStars
             count={5}
-            onClick={ratingChanged}
+            onChange={(newRating) => {
+              setRatings(newRating);
+            }}
             size={24}
             activeColor="#ffd700"
           />
         </div>
-
         <form className="w-full max-w-xl bg-white rounded-lg px-4 pt-2">
           <div className="flex flex-wrap -mx-3 mb-6">
             <h2 className="px-4 pt-3 pb-2 text-gray-800 text-lg">

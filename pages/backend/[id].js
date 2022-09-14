@@ -1,43 +1,10 @@
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Comment from "../../components/Comment";
+import Ratings from "../../components/Ratings";
 import { useAuthStore } from "../../contextApi/UserContext";
-
-// export async function getStaticPaths() {
-//   const { URL } = process.env;
-//   // Call an external API endpoint to get posts
-//   const res = await fetch(`${URL}/api/blogs`);
-//   const posts = await res.json();
-
-//   // Get the paths we want to pre-render based on posts
-//   const paths = posts.map((post) => ({
-//     params: { id: post._id.toString() },
-//   }));
-
-//   // We'll pre-render only these paths at build time.
-//   // { fallback: false } means other routes should 404.
-//   return { paths, fallback: false };
-// }
-
-// export async function getStaticProps({ params }) {
-//   const { URL } = process.env;
-
-//   let id = params.id;
-//   // Call an external API endpoint to get posts.
-//   // You can use any data fetching library
-//   const res = await fetch(`${URL}/api/blogs/${id}`);
-//   const posts = await res.json();
-
-//   // By returning { props: { posts } }, the Blog component
-//   // will receive `posts` as a prop at build time
-//   return {
-//     props: {
-//       posts,
-//     },
-//   };
-// }
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
@@ -52,12 +19,22 @@ export async function getServerSideProps(context) {
 }
 
 function SingleBackendBlog({ posts }) {
-  const [newComment, setNewComment] = useState(false);
   const { authState } = useAuthStore();
   const { user } = authState;
   const router = useRouter();
   const { id } = router.query;
-  console.log(posts);
+  const [refresh, setRefresh] = useState(false);
+  const { numReviews } = posts;
+  //refresh data
+  const refreshData = () => {
+    setRefresh(false);
+    router.replace(router.asPath);
+  };
+
+  useEffect(() => {
+    refreshData();
+  }, [refresh]);
+
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">
@@ -97,7 +74,7 @@ function SingleBackendBlog({ posts }) {
             ></div>
           </div>
 
-          <div className="leading-1 mt-10">
+          <div className="leading-1 mt-10 ">
             {`Published on ${moment(posts.createdAt).format("MMM Do YY")}`}
           </div>
         </div>
@@ -109,13 +86,41 @@ function SingleBackendBlog({ posts }) {
             No Reviews
           </p>
         )}
+      </div>
 
-        <Comment
-          id={id}
-          user={user?.token}
-          newComment={newComment}
-          setNewComment={setNewComment}
-        />
+      <h2 className="py-10 text-2xl text-center">Please give us a review</h2>
+      <div className="flex justify-center flex-wrap items-start px-5 py-10 gap-x-10">
+        <Comment id={id} user={user?.token} setRefresh={setRefresh} />
+
+        <div className="w-3/4 md:w-2/4">
+          <h2 className="py-5 font-semibold">Customer Reviews</h2>
+          {posts.reviews.length === 0 && (
+            <h2 className="py-5 font-semibold">
+              No Reviews yet write something !!!!
+            </h2>
+          )}
+          {posts.reviews.map((i) => {
+            return (
+              <>
+                <div className="flex gap-y-2 " key={i._id}>
+                  {/* mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10 */}
+
+                  <div className="flex-1 w-full border-4 border-grey-600 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed mb-4">
+                    <Ratings ratings={i.rating} numberOfRatings={i.rating} />
+                    <strong>{i.name}</strong>{" "}
+                    <span className="text-xs text-gray-400">
+                      {moment(i.createdAt).format("MMM Do YY")}
+                    </span>
+                    <p className="text-sm">{i.comment}</p>
+                    <div className="mt-4 flex items-center">
+                      <div className="flex -space-x-2 mr-2"></div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

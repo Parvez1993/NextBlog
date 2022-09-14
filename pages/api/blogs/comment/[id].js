@@ -18,16 +18,12 @@ handlerId.post(async (req, res) => {
     const product = await Blog.findById(req.query.id);
 
     if (product) {
-      console.log(product.reviews[0].user.toString());
-      console.log(req.user.userId);
       const alreadyReviewed = await product.reviews.find((r) => {
         return r.user.toString() === req.user.userId;
       });
 
-      console.log("already reviewed", alreadyReviewed);
-
       if (alreadyReviewed) {
-        throw new Error("Sorry");
+        throw new Error("Sorry already reviewed");
       }
       let userdetail = await User.findById(req.user.userId).select("-password");
       const review = {
@@ -44,7 +40,7 @@ handlerId.post(async (req, res) => {
       await product.save();
       res.status(201).json({ message: "Review added" });
     } else {
-      res.status(404).send("No Review Found");
+      throw new Error("No Review Found");
     }
   }
 });

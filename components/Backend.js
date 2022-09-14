@@ -4,7 +4,7 @@ import Link from "next/link";
 function Backend({ posts }) {
   return (
     <>
-      <div className="py-20">
+      <div className="py-20 bg-gray-100">
         {" "}
         <h3 className="font-bold text-3xl lg:text-5xl text-center mb-28">
           Backend

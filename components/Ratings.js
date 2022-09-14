@@ -1,10 +1,9 @@
-import React from "react";
 import { FaStarHalfAlt, FaStar, FaRegStar } from "react-icons/fa";
 function Ratings({ ratings, numberOfRatings }) {
   return (
     <>
       <div className="flex gap-4">
-        <div>
+        <div className="flex items-center">
           {ratings >= 1 ? (
             <FaStar />
           ) : ratings >= 0.5 ? (
