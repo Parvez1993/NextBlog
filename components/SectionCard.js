@@ -21,7 +21,7 @@ function SectionCard({ posts, link }) {
                     {" "}
                     {item.tags.map((i, k) => (
                       <span
-                        className="inline-block py-1 px-2 rounded bg-red-50 text-red-500 text-xs font-medium tracking-widest"
+                        className="inline-block py-1 px-2 rounded bg-red-50 text-red-500 text-xs font-medium tracking-widest mx-2"
                         key={k}
                       >
                         {i}
@@ -39,6 +39,7 @@ function SectionCard({ posts, link }) {
                       layout="intrinsic"
                       height="100%"
                       width="100%"
+                      className="-z-10"
                     />
                   </div>
                   <p className="leading-relaxed mb-8">{item.metaDesc}</p>

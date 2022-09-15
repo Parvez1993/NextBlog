@@ -50,7 +50,7 @@ function SingleFrontendBlog({ posts }) {
             {posts.tags.map((post) => {
               return (
                 <>
-                  <div className="bg-red-600 text-white p-2 rounded-lg">
+                  <div className="bg-red-600 text-white p-2 rounded-lg" key->
                     {post}
                   </div>
                 </>
@@ -94,25 +94,23 @@ function SingleFrontendBlog({ posts }) {
           {posts.reviews
             .slice(0)
             .reverse()
-            .map((i) => {
+            .map((i, k) => {
               return (
-                <>
-                  <div className="flex gap-y-2 " key={i._id}>
-                    {/* mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10 */}
+                <div className="flex gap-y-2 " key={k}>
+                  {/* mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10 */}
 
-                    <div className="flex-1 w-full border-4 border-grey-600 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed mb-4">
-                      <Ratings ratings={i.rating} numberOfRatings={i.rating} />
-                      <strong>{i.name}</strong>{" "}
-                      <span className="text-xs text-gray-400">
-                        {moment(i.createdAt).format("MMM Do YY")}
-                      </span>
-                      <p className="text-sm">{i.comment}</p>
-                      <div className="mt-4 flex items-center">
-                        <div className="flex -space-x-2 mr-2"></div>
-                      </div>
+                  <div className="flex-1 w-full border-4 border-grey-600 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed mb-4">
+                    <Ratings ratings={i.rating} numberOfRatings={i.rating} />
+                    <strong>{i.name}</strong>{" "}
+                    <span className="text-xs text-gray-400">
+                      {moment(i.createdAt).format("MMM Do YY")}
+                    </span>
+                    <p className="text-sm">{i.comment}</p>
+                    <div className="mt-4 flex items-center">
+                      <div className="flex -space-x-2 mr-2"></div>
                     </div>
                   </div>
-                </>
+                </div>
               );
             })}
         </div>

@@ -12,6 +12,7 @@ const initialState = {
       : null,
   loading: false,
   error: null,
+  users: [],
 };
 
 function authReducer(state, action) {
@@ -43,6 +44,14 @@ function authReducer(state, action) {
       return {
         ...state,
         user: "",
+        loading: false,
+        error: "",
+      };
+
+    case "GET_ALL_USERS":
+      return {
+        ...state,
+        users: action.payload,
         loading: false,
         error: "",
       };

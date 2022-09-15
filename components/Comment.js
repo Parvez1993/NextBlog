@@ -8,9 +8,13 @@ function Comment({ id, user, setRefresh }) {
   const [ratings, setRatings] = useState(0);
   const { createReviewDispatch } = useCreateBlog();
 
-  console.log(ratings);
+  ratings;
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      return window.alert("Login in First");
+    }
     try {
       createReviewDispatch({ type: "PRODUCT_CREATE_REVIEW_BEGIN" });
       const data = await axios.post(
@@ -71,8 +75,8 @@ function Comment({ id, user, setRefresh }) {
                   stroke="currentColor"
                 >
                   <path
-                    strokeLineCap="round"
-                    strokeLineJoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     strokeWidth="2"
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />

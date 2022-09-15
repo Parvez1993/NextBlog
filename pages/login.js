@@ -17,8 +17,6 @@ function Login() {
 
   const { user, error, loading } = authState;
 
-  console.log(error);
-
   useEffect(() => {
     if (user) {
       if (user.isAdmin) {

@@ -6,8 +6,8 @@ function Frontend({ posts }) {
     <>
       <div className="py-20">
         {" "}
-        <h3 className="font-bold text-3xl lg:text-5xl text-center mb-28">
-          Frontend
+        <h3 className="font-bold text-3xl lg:text-3xl text-center mb-28">
+          Top Frontend Topics
         </h3>
         <div className="flex items-center flex-col lg:flex-row justify-center resposive gap-x-2">
           <div className="relative">

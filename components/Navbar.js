@@ -30,10 +30,10 @@ const Navbar = ({ open, showNav, setShowNav }) => {
   useEffect(() => {
     if (userLocal) {
       if (userLocal.info.isAdmin === true) {
-        console.log("here");
+        ("here");
         setAdmin(true);
       } else {
-        console.log("there", userLocal.info.isAdmin);
+        "there", userLocal.info.isAdmin;
         setAdmin(false);
       }
     }
@@ -45,11 +45,13 @@ const Navbar = ({ open, showNav, setShowNav }) => {
     router.replace(router.asPath);
   };
 
+  console.log(admin);
+
   return (
     <div
       className={`${
         open
-          ? "w-96 flex flex-col p-3 bg-gray-100 drop-shadow-2xl shadow duration-500"
+          ? "w-96 flex flex-col p-3 bg-gray-100 drop-shadow-2xl shadow duration-500 openNav"
           : "bg-gray-300 h-full p-2 "
       }`}
     >
@@ -169,7 +171,7 @@ const Navbar = ({ open, showNav, setShowNav }) => {
               ""
             )}
 
-            {!admin ? (
+            {userLocal && admin === false ? (
               <Menu>
                 {({ open }) => (
                   <>
@@ -230,12 +232,12 @@ const Navbar = ({ open, showNav, setShowNav }) => {
                   </>
                 )}
               </Menu>
-            ) : (
+            ) : admin === true ? (
               <Menu>
                 {({ open }) => (
                   <>
                     <span className="rounded-md shadow-sm">
-                      <Menu.Button className="inline-flex justify-center w-full px-4 py-2 my-4 text-sm font-medium leading-5 text-gray-800 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800">
+                      <Menu.Button className="inline-flex justify-center lg:w-full sm:w-1/4 px-4 py-2 my-4 text-sm font-medium leading-5 text-gray-800 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800">
                         <span>Admin</span>
                         <svg
                           className="w-5 h-5 ml-2 -mr-1"
@@ -262,7 +264,7 @@ const Navbar = ({ open, showNav, setShowNav }) => {
                     >
                       <Menu.Items
                         static
-                        className="absolute right-0 lg:-right-20 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+                        className="absolute left-28 lg:-right-20  w-56 mt-2 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
                       >
                         <div className="px-4 py-3">
                           <p className="text-sm leading-5">Signed in as</p>
@@ -305,7 +307,7 @@ const Navbar = ({ open, showNav, setShowNav }) => {
                           <Menu.Item>
                             {({ active }) => (
                               <a
-                                href="#license"
+                                href="/users?page=1"
                                 className={`${
                                   active
                                     ? "bg-gray-100 text-gray-900"
@@ -339,6 +341,8 @@ const Navbar = ({ open, showNav, setShowNav }) => {
                   </>
                 )}
               </Menu>
+            ) : (
+              ""
             )}
           </ul>
         </div>

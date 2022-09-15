@@ -1,80 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { useBlogStore } from "../../contextApi/Blog";
 import axios from "axios";
 import moment from "moment";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import { useAuthStore } from "../../contextApi/UserContext";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { useAuthStore } from "../contextApi/UserContext";
 
-function BlogTable() {
-  const { blogState, blogDispatch } = useBlogStore();
+function UserTable() {
+  const { authState, authDispatch } = useAuthStore();
 
-  const { blogs: blog, error, loading } = blogState;
+  const { users: noOfusers, user, error, loading, success } = authState;
 
-  const { blogs, numOfPages, page } = blog;
-
-  let [success, setSuccess] = useState("");
-
-  let [reload, setReload] = useState(false);
-
-  const { authState } = useAuthStore();
-
-  const { user } = authState;
+  const { users, numOfPages } = noOfusers;
 
   let router = useRouter();
 
   let pageNo = router.query["page"];
   let keyword = router.query["keyword"];
-  let status = router.query["status"];
 
   useEffect(() => {
     let fetchProducts = async () => {
       try {
-        blogDispatch({ type: "BLOG_LOADING" });
+        authDispatch({ type: "AUTH_LOADING" });
         let { data } = await axios.get(
-          `/api/blogs?page=${pageNo ? pageNo : 1}&keyword=${
+          `/api/users?page=${pageNo ? pageNo : 1}&keyword=${
             keyword ? keyword : ""
-          }&status=${status ? status : "all"}`
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
         );
-        blogDispatch({ type: "BLOG_SUCCESS", payload: data });
+        authDispatch({ type: "GET_ALL_USERS", payload: data });
       } catch (error) {
-        blogDispatch({ type: "BLOG_ERROR", payload: error.msg });
+        authDispatch({ type: "AUTH_ERROR", payload: error.msg });
       }
     };
 
     fetchProducts();
-  }, [pageNo, keyword, status]);
-
-  let handleDelete = async (id) => {
-    try {
-      blogDispatch({ type: "BLOG_LOADING" });
-      let { data } = await axios.delete(`/api/blogs/admin/editPic/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      blogDispatch({ type: "BLOG_SUCCESS", payload: data });
-      setSuccess(true);
-      setReload(true);
-    } catch (error) {
-      blogDispatch({ type: "BLOG_ERROR", payload: error.msg });
-    }
-  };
-
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-
-    if (reload) {
-      setReload(false);
-      fetchProducts();
-    }
-  }, [reload, success]);
+  }, [pageNo, keyword]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -82,33 +48,23 @@ function BlogTable() {
     let search = e.target.value.trim();
     if (search) {
       router.push({
-        pathname: "/admin",
+        pathname: "/users",
         query: { page: pageNo ? pageNo : 1, keyword: e.target.value },
       });
     } else {
-      router.push("/admin?page=1");
+      router.push("/users?page=1");
     }
   };
 
-  const handleStatus = async (value) => {
-    router.push({
-      pathname: "/admin",
-      query: {
-        page: 1,
-        status: value,
-      },
-    });
-  };
-
   return (
-    <>
+    <div>
       {error ? toast.error(error) : loading ? toast.success("loading") : ""}
       {success ? toast.success("deleted successfully") : ""}
-      {blogs !== [] && (
+      {users !== [] && (
         <div>
           {" "}
           <div className="flex  flex-col gap-y-3 md:flex-row justify-between items-center px-8">
-            <div className="w-1/2 md:w-1/3">
+            <div className="w-1/2 md:w-1/3 mx-auto">
               {" "}
               <form>
                 <label
@@ -146,23 +102,8 @@ function BlogTable() {
                 </div>
               </form>
             </div>
-            <div className="w-1/2 md:w-1/3">
-              <select
-                onChange={(e) => handleStatus(e.target.value)}
-                id="countries_disabled"
-                className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
-              >
-                <option selected value="all">
-                  Select Status
-                </option>
-                <option value="all">all</option>
-                <option value="incomplete">incomplete</option>
-                <option value="processing">processing</option>
-                <option value="success">success</option>
-              </select>
-            </div>
           </div>
-          <div className="bg-gray-50 my-16 w-3/4 mx-auto">
+          <div className="bg-gray-50 my-16 w-1/2 mx-auto">
             <div className="overflow-x-auto relative">
               <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -171,28 +112,22 @@ function BlogTable() {
                       Serial
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      Blog Title
+                      Name
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      Status
+                      Email
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      Category
+                      Role
                     </th>
                     <th scope="col" className="py-3 px-6">
-                      Created
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      Edit
-                    </th>
-                    <th scope="col" className="py-3 px-6">
-                      Delete
+                      Joined
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {blogs &&
-                    blogs.map((item, k) => {
+                  {users &&
+                    users.map((item, k) => {
                       return (
                         <tr
                           key={k}
@@ -208,29 +143,15 @@ function BlogTable() {
                             scope="row"
                             className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                           >
-                            {item.title}
+                            {item.name}
                           </th>
-                          <td className="py-4 px-6">{item.status}</td>
-                          <td className="py-4 px-6">{item.category_name}</td>
+                          <td className="py-4 px-6">{item.email}</td>
+                          <td className="py-4 px-6">
+                            {item.isAdmin ? "admin" : "user"}
+                          </td>
+
                           <td className="py-4 px-6">
                             {moment(item.createdAt).format("MMM Do YY")}
-                          </td>
-                          <td className="py-4 px-6">
-                            <Link href={`/admin/${item._id}`}>
-                              <a className="bg-green-500 text-center px-3 py-2 border text-white">
-                                Edit
-                              </a>
-                            </Link>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div
-                              className="bg-red-500 text-center px-1 py-2 border text-white"
-                              onClick={() => {
-                                handleDelete(item._id);
-                              }}
-                            >
-                              Delete
-                            </div>
                           </td>
                         </tr>
                       );
@@ -243,7 +164,7 @@ function BlogTable() {
             <li>
               <a
                 href="#"
-                class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                className="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 Previous
               </a>
@@ -251,7 +172,7 @@ function BlogTable() {
             <li>
               {Array.from(Array(numOfPages), (e, i) => {
                 return (
-                  <Link href={`admin?page=${i + 1}`}>
+                  <Link href={`users?page=${i + 1}`}>
                     <a className="py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                       {" "}
                       {i + 1}
@@ -272,8 +193,8 @@ function BlogTable() {
           </ul>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
-export default BlogTable;
+export default UserTable;

@@ -1,3 +1,7 @@
+.openNav {
+  background-color: red !important;
+}
+
 @media (min-width: 768px) {
   .highlight:hover {
     border-radius: 1em 0 1em 0;
@@ -8,4 +12,8 @@
       rgba(255, 20, 0, 0.1)
     );
   }
+}
+
+.zIndex {
+  z-index: -10;
 }

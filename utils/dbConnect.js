@@ -9,9 +9,9 @@ async function dbConnect() {
 
   const db = await mongoose
     .connect(process.env.DATABASE_LOCAL, () => {
-      console.log("connected");
+      ("connected");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => err);
 
   connection.isConnected = db.connections[0].readyState;
 }

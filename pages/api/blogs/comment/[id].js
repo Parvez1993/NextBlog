@@ -11,7 +11,7 @@ handlerId.post(async (req, res) => {
   dbConnect();
   const { rating, comment } = req.body;
 
-  console.log(rating, comment, req.user.userId);
+  rating, comment, req.user.userId;
   const blog = await Blog.findById(req.query.id);
 
   if (blog) {

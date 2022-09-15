@@ -1,4 +1,5 @@
 import SectionCard from "../../components/SectionCard";
+import Footer from "../../components/Footer";
 
 export async function getStaticProps() {
   const { URL } = process.env;
@@ -18,7 +19,12 @@ export async function getStaticProps() {
 }
 
 function frontend({ posts }) {
-  return <SectionCard posts={posts} link="frontend" />;
+  return (
+    <>
+      <SectionCard posts={posts} link="frontend" />
+      <Footer />
+    </>
+  );
 }
 
 export default frontend;
