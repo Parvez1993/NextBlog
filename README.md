@@ -1,34 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+To start the project simply run npm run dev. Link will be given in bio. 
+This is a next blog site 
 
-## Getting Started
+Technology: Nextjs
+Css Framework: Tailwind 
+Database used: Mongodb
+CLould Database: Cloudinary 
+State Management: ContextApi, useReducer
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+The blog site has
+1. Admin Panel 
+ a. Crud blogs
+ b. See Users 
+ c. See overview 
+ d. rich text editor to write beautiful blogs. 
+ e. image upload and edit to cloudinary
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ 
+2. User
+ a. Login/Registration 
+ b. comment 
+ c.rate
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Sneak Peak 
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
+Homepage: 
 
-To learn more about Next.js, take a look at the following resources:
+![1](https://user-images.githubusercontent.com/28535765/190494443-f7bb9085-40d5-48ea-90fe-53d79f02db47.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+Admin Panel: 
+
+1. Overiew Page
+
+![overview](https://user-images.githubusercontent.com/28535765/190495384-72c31032-a835-4105-b67d-e6375c8827d1.png)
+
+
+2. Create Page
+
+![create](https://user-images.githubusercontent.com/28535765/190495423-f6c1760c-4443-4f8a-afeb-5594f6975cfb.png)
+
+
+3. Edit Page 
+
+![FireShot Capture 009 -  - localhost](https://user-images.githubusercontent.com/28535765/190495506-db246995-9025-41ca-8854-1433b86b63b7.png)
+
+
+
+
+
+
+
+
