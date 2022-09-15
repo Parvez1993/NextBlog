@@ -314,7 +314,7 @@ const UpdateBlogs = () => {
               >
                 <option value="incomplete">incomplete</option>
                 <option value="processing">processing</option>
-                <option value="success">success</option>
+                <option value="completed">completed</option>
               </select>
             </div>
             <div>
