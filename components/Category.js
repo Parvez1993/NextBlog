@@ -25,28 +25,37 @@ function Category() {
               </div>
             </a>
           </Link>
-          <div className="grayscale hover:grayscale-0 transition delay-150 duration-300 cursor-pointer text-red-600">
-            {" "}
-            <Image
-              alt="backend"
-              src="/images/backend.png"
-              layout="intrinsic"
-              width={100}
-              height={100}
-            />
-            <p className="text-center text-lg font-bold mt-3">Backend</p>
-          </div>
-          <div className="grayscale hover:grayscale-0 transition delay-150 duration-300 cursor-pointer text-red-600">
-            {" "}
-            <Image
-              alt="tips"
-              src="/images/chat.png"
-              layout="intrinsic"
-              width={100}
-              height={100}
-            />
-            <p className="text-center text-lg font-bold mt-3">Tips</p>
-          </div>
+          <Link href="/backend">
+            <a>
+              {" "}
+              <div className="grayscale hover:grayscale-0 transition delay-150 duration-300 cursor-pointer text-red-600">
+                {" "}
+                <Image
+                  alt="backend"
+                  src="/images/backend.png"
+                  layout="intrinsic"
+                  width={100}
+                  height={100}
+                />
+                <p className="text-center text-lg font-bold mt-3">Backend</p>
+              </div>
+            </a>
+          </Link>
+          <Link href="/tips">
+            <a>
+              <div className="grayscale hover:grayscale-0 transition delay-150 duration-300 cursor-pointer text-red-600">
+                {" "}
+                <Image
+                  alt="tips"
+                  src="/images/chat.png"
+                  layout="intrinsic"
+                  width={100}
+                  height={100}
+                />
+                <p className="text-center text-lg font-bold mt-3">Tips</p>
+              </div>
+            </a>
+          </Link>
         </div>
       </div>
     </>

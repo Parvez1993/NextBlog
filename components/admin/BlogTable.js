@@ -5,11 +5,14 @@ import moment from "moment";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../../contextApi/UserContext";
+import { useRouter } from "next/router";
 
 function BlogTable() {
   const { blogState, blogDispatch } = useBlogStore();
 
-  const { blogs, error, loading } = blogState;
+  const { blogs: blog, error, loading } = blogState;
+
+  const { blogs, numOfPages, page } = blog;
 
   let [success, setSuccess] = useState("");
 
@@ -19,11 +22,21 @@ function BlogTable() {
 
   const { user } = authState;
 
+  let router = useRouter();
+
+  let pageNo = router.query["page"];
+  let keyword = router.query["keyword"];
+  let status = router.query["status"];
+
   useEffect(() => {
     let fetchProducts = async () => {
       try {
         blogDispatch({ type: "BLOG_LOADING" });
-        let { data } = await axios.get("/api/blogs");
+        let { data } = await axios.get(
+          `/api/blogs?page=${pageNo ? pageNo : 1}&keyword=${
+            keyword ? keyword : ""
+          }&status=${status ? status : "all"}`
+        );
         blogDispatch({ type: "BLOG_SUCCESS", payload: data });
       } catch (error) {
         blogDispatch({ type: "BLOG_ERROR", payload: error.msg });
@@ -31,7 +44,7 @@ function BlogTable() {
     };
 
     fetchProducts();
-  }, []);
+  }, [pageNo, keyword, status]);
 
   let handleDelete = async (id) => {
     try {
@@ -63,6 +76,30 @@ function BlogTable() {
     }
   }, [reload, success]);
 
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    let search = e.target.value.trim();
+    if (search) {
+      router.push({
+        pathname: "/admin",
+        query: { page: pageNo ? pageNo : 1, keyword: e.target.value },
+      });
+    } else {
+      router.push("/admin?page=1");
+    }
+  };
+
+  const handleStatus = async (value) => {
+    router.push({
+      pathname: "/admin",
+      query: {
+        page: 1,
+        status: value,
+      },
+    });
+  };
+
   return (
     <>
       {error ? toast.error(error) : loading ? toast.success("loading") : ""}
@@ -75,7 +112,7 @@ function BlogTable() {
               {" "}
               <form>
                 <label
-                  for="default-search"
+                  htmlFor="default-search"
                   className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
                 >
                   Search
@@ -104,29 +141,28 @@ function BlogTable() {
                     className="block outline-none p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  focus:ring-purple-500 focus:border-purple-500 dark:bg-purple-700 dark:border-purple-600 dark:placeholder-purple-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
                     placeholder="Search"
                     required
+                    onChange={submitHandler}
                   />
-                  <button
-                    type="submit"
-                    className="text-white absolute right-2.5 bottom-2.5 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
-                  >
-                    Search
-                  </button>
                 </div>
               </form>
             </div>
             <div className="w-1/2 md:w-1/3">
               <select
+                onChange={(e) => handleStatus(e.target.value)}
                 id="countries_disabled"
                 className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple-500 dark:focus:border-purple-500"
               >
-                <option selected>Select Status</option>
+                <option selected value="all">
+                  Select Status
+                </option>
+                <option value="all">all</option>
                 <option value="incomplete">incomplete</option>
                 <option value="processing">processing</option>
                 <option value="success">success</option>
               </select>
             </div>
           </div>
-          <div className="bg-gray-50 min-h-screen my-16">
+          <div className="bg-gray-50 my-16">
             <div className="overflow-x-auto relative">
               <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -203,6 +239,37 @@ function BlogTable() {
               </table>
             </div>
           </div>
+          <ul className="flex justify-center my-5 -space-x-px">
+            <li>
+              <a
+                href="#"
+                class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              >
+                Previous
+              </a>
+            </li>
+            <li>
+              {Array.from(Array(numOfPages), (e, i) => {
+                return (
+                  <Link href={`admin?page=${i + 1}`}>
+                    <a className="py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                      {" "}
+                      {i + 1}
+                    </a>
+                  </Link>
+                );
+              })}
+            </li>
+
+            <li>
+              <a
+                href="#"
+                className="py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              >
+                Next
+              </a>
+            </li>
+          </ul>
         </div>
       )}
     </>

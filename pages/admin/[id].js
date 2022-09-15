@@ -210,6 +210,8 @@ const UpdateBlogs = () => {
           setStatus("incomplete");
           setCategory("frontend");
           setUpload("");
+
+          router.push("/admin");
         }
       } catch (error) {
         blogDispatch({

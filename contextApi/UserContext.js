@@ -38,6 +38,14 @@ function authReducer(state, action) {
         loading: false,
         error: action.payload,
       };
+
+    case "AUTH_LOGOUT":
+      return {
+        ...state,
+        user: "",
+        loading: false,
+        error: "",
+      };
     default:
       return state;
   }
